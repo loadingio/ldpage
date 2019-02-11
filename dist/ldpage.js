@@ -7,7 +7,18 @@ ldPage = function(opt){
     this._fetch = opt.fetch;
     delete opt.fetch;
   }
-  import$((this.evtHandler = {}, this.handle = {}, this.offset = 0, this.running = false, this.end = false, this.boundary = 0, this.limit = 20, this.scrollDelay = 100, this.fetchDelay = 200, this.noScrollFetch = false, this), opt);
+  this.evtHandler = {};
+  this.handle = {};
+  this.offset = 0;
+  this.running = false;
+  this.end = false;
+  this.opt = import$({
+    boundary: 0,
+    limit: 20,
+    scrollDelay: 100,
+    fetchDelay: 200,
+    fetchOnScroll: false
+  }, opt);
   if (that = this.host) {
     this.setHost(that);
   }
@@ -55,7 +66,9 @@ ldPage.prototype = import$(Object.create(Object.prototype), {
     if (!this.host) {
       return;
     }
-    return this.host.addEventListener('scroll', f);
+    if (this.opt.fetchOnScroll) {
+      return this.host.addEventListener('scroll', f);
+    }
   },
   onScroll: function(e){
     var this$ = this;
@@ -64,7 +77,7 @@ ldPage.prototype = import$(Object.create(Object.prototype), {
     }
     clearTimeout(this.handle.scroll);
     return this.handle.scroll = setTimeout(function(){
-      if (this$.host.scrollHeight - this$.host.scrollTop - this$.host.clientHeight > this$.boundary) {
+      if (this$.host.scrollHeight - this$.host.scrollTop - this$.host.clientHeight > this$.opt.boundary) {
         return;
       }
       if (!this$.end && !this$.running) {
@@ -72,7 +85,7 @@ ldPage.prototype = import$(Object.create(Object.prototype), {
           return this$.fire('scroll.fetch', it);
         });
       }
-    }, this.scrollDelay);
+    }, this.opt.scrollDelay);
   },
   setLoader: function(){},
   parseResult: function(it){
@@ -99,7 +112,7 @@ ldPage.prototype = import$(Object.create(Object.prototype), {
           }
           return res(ret);
         });
-      }, opt.delay || this$.fetchDelay || 200);
+      }, opt.delay || this$.opt.fetchDelay || 200);
     });
   }
 });

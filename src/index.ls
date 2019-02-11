@@ -2,8 +2,10 @@ ldPage = (opt = {}) ->
   if opt.fetch => @_fetch = opt.fetch; delete opt.fetch
   @ <<< {
     evt-handler: {}
-    handle: {}, offset: 0, running: false, end: false, boundary: 0
-    limit: 20, scroll-delay: 100, fetch-delay: 200, no-scroll-fetch: false
+    handle: {}, offset: 0, running: false, end: false
+  }
+  @opt = {
+    boundary: 0, limit: 20, scroll-delay: 100, fetch-delay: 200, fetch-on-scroll: false
   } <<< opt
   if @host => @set-host that
   @
@@ -21,15 +23,15 @@ ldPage.prototype = Object.create(Object.prototype) <<< do
     if @host => @host.removeEventListener \scroll, f
     @host = (if typeof(host) == \string => document.querySelector(host) else host)
     if !@host => return
-    @host.addEventListener \scroll, f
+    if @opt.fetch-on-scroll => @host.addEventListener \scroll, f
 
   on-scroll: (e) ->
     if @running or @end => return
     clearTimeout @handle.scroll
     @handle.scroll = setTimeout (~>
-      if @host.scrollHeight - @host.scrollTop - @host.clientHeight > @boundary => return
+      if @host.scrollHeight - @host.scrollTop - @host.clientHeight > @opt.boundary => return
       if !@end and !@running => @fetch!then ~> @fire \scroll.fetch, it
-    ), @scroll-delay
+    ), @opt.scroll-delay
 
   set-loader: ->
   parse-result: -> it
@@ -44,5 +46,5 @@ ldPage.prototype = Object.create(Object.prototype) <<< do
         @offset += (ret.length or 0)
         if !ret.length => @end = true
         res ret
-    ), (opt.delay or @fetch-delay or 200)
+    ), (opt.delay or @opt.fetch-delay or 200)
 
