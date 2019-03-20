@@ -19,6 +19,7 @@ ldPage = function(opt){
     fetchDelay: 200,
     fetchOnScroll: false
   }, opt);
+  this.limit = this.opt.limit;
   if (that = this.host) {
     this.setHost(that);
   }
@@ -52,6 +53,9 @@ ldPage.prototype = import$(Object.create(Object.prototype), {
       clearTimeout(v);
     }
     return this.offset = 0, this.end = false, this;
+  },
+  isEnd: function(){
+    return this.end;
   },
   setHost: function(host){
     var f, this$ = this;
@@ -96,7 +100,7 @@ ldPage.prototype = import$(Object.create(Object.prototype), {
     opt == null && (opt = {});
     return new Promise(function(res, rej){
       if (this$.running || this$.end) {
-        return;
+        return res([]);
       }
       if (this$.handle.fetch) {
         clearTimeout(this$.handle.fetch);

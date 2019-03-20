@@ -7,6 +7,7 @@ ldPage = (opt = {}) ->
   @opt = {
     boundary: 0, limit: 20, scroll-delay: 100, fetch-delay: 200, fetch-on-scroll: false
   } <<< opt
+  @limit = @opt.limit # expect user to use this directly.
   if @host => @set-host that
   @
 
@@ -18,6 +19,7 @@ ldPage.prototype = Object.create(Object.prototype) <<< do
   init: ->
     for k,v of @handle => clearTimeout v
     @ <<< offset: 0, end: false
+  is-end: -> @end
   set-host: (host=document.scrollingElement) ->
     f = (e) ~> @on-scroll e
     if @host => @host.removeEventListener \scroll, f
@@ -35,8 +37,8 @@ ldPage.prototype = Object.create(Object.prototype) <<< do
 
   set-loader: ->
   parse-result: -> it
-  fetch: (opt={}) -> new Promise (res, rej) ~>
-    if @running or @end => return 
+  fetch: (opt={}) -> new Promise (res, rej) ~> # TODO clear res when clearTimeout is called
+    if @running or @end => return res []
     if @handle.fetch => clearTimeout @handle.fetch
     @handle.fetch = setTimeout (~>
       @running = true
