@@ -8,7 +8,7 @@ ldPage = (opt = {}) ->
     boundary: 0, limit: 20, scroll-delay: 100, fetch-delay: 200, fetch-on-scroll: false
   } <<< opt
   @limit = @opt.limit # expect user to use this directly.
-  if @host => @set-host that
+  if @opt.host => @set-host that
   @
 
 ldPage.prototype = Object.create(Object.prototype) <<< do

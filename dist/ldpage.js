@@ -20,7 +20,7 @@ ldPage = function(opt){
     fetchOnScroll: false
   }, opt);
   this.limit = this.opt.limit;
-  if (that = this.host) {
+  if (that = this.opt.host) {
     this.setHost(that);
   }
   return this;
