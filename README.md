@@ -15,6 +15,20 @@ Pagination library.
 see src/sample.ls.
 
 
+## Configuration
+
+ * host - scrolling host. for entire document, use `window`.
+ * fetch-on-scroll - should ldPage fetch data when scrolling to the bottom of the host. default false.
+ * fetch - custom function to fetch data according to ldPage's status. two  
+   - use this.limit and this.offset to control the current position of fetch progress.
+ * fetch-delay - delay before fetching when fetch is called.
+
+
+## Mesthod
+
+ * setHost(node) - set scrolling host. for entire document, use `window`.
+
+
 # License
 
 MIT.
