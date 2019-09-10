@@ -19,8 +19,9 @@ see src/sample.ls.
 
  * host - scrolling host. for entire document, use `window`.
  * fetch-on-scroll - should ldPage fetch data when scrolling to the bottom of the host. default false.
- * fetch - custom function to fetch data according to ldPage's status. two  
+ * fetch - custom function to fetch data according to ldPage's status.
    - use this.limit and this.offset to control the current position of fetch progress.
+   - should return the list fetched for ldPage to count progress.
  * fetch-delay - delay before fetching when fetch is called.
 
 
