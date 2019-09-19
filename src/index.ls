@@ -42,7 +42,7 @@ ldPage.prototype = Object.create(Object.prototype) <<< do
     if @handle.fetch => clearTimeout @handle.fetch
     @handle.fetch = setTimeout (~>
       @running = true
-      @_fetch!then (ret) ~>
+      @_fetch!then (ret = []) ~>
         ret = @parse-result ret
         @running = false
         @offset += (ret.length or 0)

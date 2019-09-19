@@ -108,6 +108,7 @@ ldPage.prototype = import$(Object.create(Object.prototype), {
       return this$.handle.fetch = setTimeout(function(){
         this$.running = true;
         return this$._fetch().then(function(ret){
+          ret == null && (ret = []);
           ret = this$.parseResult(ret);
           this$.running = false;
           this$.offset += ret.length || 0;
