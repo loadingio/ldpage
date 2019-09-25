@@ -64,8 +64,10 @@ ldPage.prototype = import$(Object.create(Object.prototype), {
     return this.end;
   },
   setHost: function(host){
-    var f, this$ = this;
-    host == null && (host = document.scrollingElement);
+    var f, update, this$ = this;
+    if (!host || (host === window || host === document || host === document.body)) {
+      host = document.scrollingElement;
+    }
     f = function(e){
       return this$.onScroll(e);
     };
@@ -73,14 +75,42 @@ ldPage.prototype = import$(Object.create(Object.prototype), {
       this.host.removeEventListener('scroll', f);
     }
     this.host = typeof host === 'string' ? document.querySelector(host) : host;
+    console.log(host, this.opt.pivot);
     if (!this.host) {
+      this.host = null;
       return;
     }
-    if (this.opt.fetchOnScroll) {
+    if (this.opt.fetchOnScroll && !this.opt.pivot) {
       return this.host.addEventListener('scroll', f);
     }
+    if (this.obs) {
+      this.obs.unobserve(this.opt.pivot);
+    }
+    console.log('here');
+    update = function(ns){
+      console.log('update', ns);
+      console.log(ns.map(function(it){
+        return it.isIntersecting;
+      }).filter(function(it){
+        return it;
+      }).length);
+      console.log(this$.end);
+      console.log(this$.running);
+      if (!(ns.map(function(it){
+        return it.isIntersecting;
+      }).filter(function(it){
+        return it;
+      }).length && !(this$.end || this$.running))) {
+        return;
+      }
+      return this$.fetch().then(function(it){
+        return this$.fire('scroll.fetch', it);
+      });
+    };
+    this.obs = new IntersectionObserver(update, {});
+    return this.obs.observe(this.opt.pivot);
   },
-  onScroll: function(e){
+  onScroll: function(){
     var this$ = this;
     if (this.running || this.end) {
       return;
@@ -119,6 +149,7 @@ ldPage.prototype = import$(Object.create(Object.prototype), {
           this$.running = false;
           this$.offset += ret.length || 0;
           if (!ret.length) {
+            this$.fire(!this$.offset ? 'empty' : 'finish');
             this$.end = true;
           }
           return res(ret);

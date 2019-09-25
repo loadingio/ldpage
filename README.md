@@ -33,6 +33,12 @@ see src/sample.ls.
  * setHost(node) - set scrolling host. for entire document, use `window`.
 
 
+## Events
+
+ * empty - fired when ldPage confirms that the list is empty.
+ * finish - fired when ldPage confirms that all items are fetched.
+
+
 # License
 
 MIT.

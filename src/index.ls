@@ -21,14 +21,21 @@ ldPage.prototype = Object.create(Object.prototype) <<< do
     @ <<< offset: 0, end: false
     if opt.data => @data = opt.data
   is-end: -> @end
-  set-host: (host=document.scrollingElement) ->
+  set-host: (host) ->
+    if !host or host in [window,document,document.body] => host = document.scrollingElement
     f = (e) ~> @on-scroll e
     if @host => @host.removeEventListener \scroll, f
     @host = (if typeof(host) == \string => document.querySelector(host) else host)
-    if !@host => return
-    if @opt.fetch-on-scroll => @host.addEventListener \scroll, f
+    if !@host => @host = null; return
+    if @opt.fetch-on-scroll and !@opt.pivot => return @host.addEventListener \scroll, f
+    if @obs => @obs.unobserve @opt.pivot
+    update = (ns) ~>
+      if !( ns.map(->it.isIntersecting).filter(->it).length and !(@end or @running) ) => return
+      @fetch!then ~> @fire \scroll.fetch, it
+    @obs = new IntersectionObserver update, {}
+    @obs.observe @opt.pivot
 
-  on-scroll: (e) ->
+  on-scroll: ->
     if @running or @end => return
     clearTimeout @handle.scroll
     @handle.scroll = setTimeout (~>
@@ -47,7 +54,9 @@ ldPage.prototype = Object.create(Object.prototype) <<< do
         ret = @parse-result ret
         @running = false
         @offset += (ret.length or 0)
-        if !ret.length => @end = true
+        if !ret.length =>
+          @fire if !@offset => \empty else \finish
+          @end = true
         res ret
     ), (opt.delay or @opt.fetch-delay or 200)
 
