@@ -25,8 +25,11 @@ see src/sample.ls.
  * fetch-delay - delay before fetching when fetch is called.
 
 
-## Mesthod
+## Method
 
+ * init(opt) - reset page. opt:
+   - data - data for use in this bunch of fetch.
+ * fetch - fetch data again.
  * setHost(node) - set scrolling host. for entire document, use `window`.
 
 

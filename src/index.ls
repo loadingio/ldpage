@@ -1,7 +1,7 @@
 ldPage = (opt = {}) ->
   if opt.fetch => @_fetch = opt.fetch; delete opt.fetch
   @ <<< {
-    evt-handler: {}
+    evt-handler: {}, data: {},
     handle: {}, offset: 0, running: false, end: false
   }
   @opt = {
@@ -16,9 +16,10 @@ ldPage.prototype = Object.create(Object.prototype) <<< do
   _fetch: -> new Promise (res, rej) -> return res {payload: []}
   on: (n, cb) -> @evt-handler.[][n].push cb
   fire: (n, ...v) -> for cb in (@evt-handler[n] or []) => cb.apply @, v
-  init: ->
+  init: (opt = {}) ->
     for k,v of @handle => clearTimeout v
     @ <<< offset: 0, end: false
+    if opt.data => @data = opt.data
   is-end: -> @end
   set-host: (host=document.scrollingElement) ->
     f = (e) ~> @on-scroll e

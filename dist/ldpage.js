@@ -8,6 +8,7 @@ ldPage = function(opt){
     delete opt.fetch;
   }
   this.evtHandler = {};
+  this.data = {};
   this.handle = {};
   this.offset = 0;
   this.running = false;
@@ -46,13 +47,18 @@ ldPage.prototype = import$(Object.create(Object.prototype), {
     }
     return results$;
   },
-  init: function(){
+  init: function(opt){
     var k, ref$, v;
+    opt == null && (opt = {});
     for (k in ref$ = this.handle) {
       v = ref$[k];
       clearTimeout(v);
     }
-    return this.offset = 0, this.end = false, this;
+    this.offset = 0;
+    this.end = false;
+    if (opt.data) {
+      return this.data = opt.data;
+    }
   },
   isEnd: function(){
     return this.end;
