@@ -82,23 +82,25 @@ ldPage.prototype = import$(Object.create(Object.prototype), {
     if (this.opt.fetchOnScroll && !this.opt.pivot) {
       return this.host.addEventListener('scroll', f);
     }
-    if (this.obs) {
-      this.obs.unobserve(this.opt.pivot);
-    }
-    update = function(ns){
-      if (!(ns.map(function(it){
-        return it.isIntersecting;
-      }).filter(function(it){
-        return it;
-      }).length && !(this$.end || this$.running))) {
-        return;
+    if (this.opt.pivot) {
+      if (this.obs) {
+        this.obs.unobserve(this.opt.pivot);
       }
-      return this$.fetch().then(function(it){
-        return this$.fire('scroll.fetch', it);
-      });
-    };
-    this.obs = new IntersectionObserver(update, {});
-    return this.obs.observe(this.opt.pivot);
+      update = function(ns){
+        if (!(ns.map(function(it){
+          return it.isIntersecting;
+        }).filter(function(it){
+          return it;
+        }).length && !(this$.end || this$.running))) {
+          return;
+        }
+        return this$.fetch().then(function(it){
+          return this$.fire('scroll.fetch', it);
+        });
+      };
+      this.obs = new IntersectionObserver(update, {});
+      return this.obs.observe(this.opt.pivot);
+    }
   },
   onScroll: function(){
     var this$ = this;
