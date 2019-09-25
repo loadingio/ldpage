@@ -75,7 +75,6 @@ ldPage.prototype = import$(Object.create(Object.prototype), {
       this.host.removeEventListener('scroll', f);
     }
     this.host = typeof host === 'string' ? document.querySelector(host) : host;
-    console.log(host, this.opt.pivot);
     if (!this.host) {
       this.host = null;
       return;
@@ -86,16 +85,7 @@ ldPage.prototype = import$(Object.create(Object.prototype), {
     if (this.obs) {
       this.obs.unobserve(this.opt.pivot);
     }
-    console.log('here');
     update = function(ns){
-      console.log('update', ns);
-      console.log(ns.map(function(it){
-        return it.isIntersecting;
-      }).filter(function(it){
-        return it;
-      }).length);
-      console.log(this$.end);
-      console.log(this$.running);
       if (!(ns.map(function(it){
         return it.isIntersecting;
       }).filter(function(it){

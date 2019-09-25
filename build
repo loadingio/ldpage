@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 mkdir -p dist
-echo "build src/index.ls -> dist/ldpage.js ..."
-./node_modules/.bin/lsc -cbp src/index.ls > dist/ldpage.js
+echo "build src/ldpage.ls -> dist/ldpage.js ..."
+./node_modules/.bin/lsc -cbp src/ldpage.ls > dist/ldpage.js
 echo "minifying ldpage.js ..."
 ./node_modules/.bin/uglifyjs dist/ldpage.js > dist/ldpage.min.js
 echo "done."
