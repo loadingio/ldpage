@@ -140,7 +140,7 @@ ldPage.prototype = import$(Object.create(Object.prototype), {
           ret = this$.parseResult(ret);
           this$.running = false;
           this$.offset += ret.length || 0;
-          if (!ret.length) {
+          if (ret.length < this$.limit) {
             this$.fire(!this$.offset ? 'empty' : 'finish');
             this$.end = true;
           }
