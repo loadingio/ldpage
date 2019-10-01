@@ -13,6 +13,7 @@ ldPage = function(opt){
   this.offset = 0;
   this.running = false;
   this.end = false;
+  this.disabled = opt.enabled != null ? !opt.enabled : false;
   this.opt = import$({
     boundary: 0,
     limit: 20,
@@ -33,6 +34,11 @@ ldPage.prototype = import$(Object.create(Object.prototype), {
         payload: []
       });
     });
+  },
+  toggle: function(v){
+    return this.disabled = v != null
+      ? !v
+      : !this.disabled;
   },
   on: function(n, cb){
     var ref$;
@@ -59,6 +65,9 @@ ldPage.prototype = import$(Object.create(Object.prototype), {
     if (opt.data) {
       return this.data = opt.data;
     }
+  },
+  fetchable: function(){
+    return !(this.disabled || this.end || this.running);
   },
   isEnd: function(){
     return this.end;
@@ -91,7 +100,7 @@ ldPage.prototype = import$(Object.create(Object.prototype), {
           return it.isIntersecting;
         }).filter(function(it){
           return it;
-        }).length && !(this$.end || this$.running))) {
+        }).length && this$.fetchable())) {
           return;
         }
         return this$.fetch().then(function(it){
@@ -104,7 +113,7 @@ ldPage.prototype = import$(Object.create(Object.prototype), {
   },
   onScroll: function(){
     var this$ = this;
-    if (this.running || this.end) {
+    if (!this.fetchable()) {
       return;
     }
     clearTimeout(this.handle.scroll);
@@ -112,7 +121,7 @@ ldPage.prototype = import$(Object.create(Object.prototype), {
       if (this$.host.scrollHeight - this$.host.scrollTop - this$.host.clientHeight > this$.opt.boundary) {
         return;
       }
-      if (!this$.end && !this$.running) {
+      if (this$.fetchable()) {
         return this$.fetch().then(function(it){
           return this$.fire('scroll.fetch', it);
         });
@@ -127,7 +136,7 @@ ldPage.prototype = import$(Object.create(Object.prototype), {
     var this$ = this;
     opt == null && (opt = {});
     return new Promise(function(res, rej){
-      if (this$.running || this$.end) {
+      if (!this$.fetchable()) {
         return res([]);
       }
       if (this$.handle.fetch) {

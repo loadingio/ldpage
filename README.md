@@ -23,6 +23,7 @@ see src/sample.ls.
    - use this.limit and this.offset to control the current position of fetch progress.
    - should return the list fetched for ldPage to count progress.
  * fetch-delay - delay before fetching when fetch is called.
+ * enabled - default true. set to false to disable fetching by default until explicitly enabled with toggle(v), 
 
 
 ## Method
@@ -31,6 +32,7 @@ see src/sample.ls.
    - data - data for use in this bunch of fetch.
  * fetch - fetch data again.
  * setHost(node) - set scrolling host. for entire document, use `window`.
+ * toggle(v) - flip enabled/disabled statue. force set to v if v(true or false) is provided.
 
 
 ## Events
