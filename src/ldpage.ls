@@ -7,7 +7,7 @@ ldPage = (opt = {}) ->
     disabled: (if opt.enabled? => !opt.enabled else false)
   }
   @opt = {
-    boundary: 0, limit: 20, scroll-delay: 100, fetch-delay: 200, fetch-on-scroll: false
+    boundary: 0, limit: 20, offset: 0, scroll-delay: 100, fetch-delay: 200, fetch-on-scroll: false
   } <<< opt
   @ <<< @opt{limit, offset}
   if @opt.host => @set-host that

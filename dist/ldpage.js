@@ -17,6 +17,7 @@ ldPage = function(opt){
   this.opt = import$({
     boundary: 0,
     limit: 20,
+    offset: 0,
     scrollDelay: 100,
     fetchDelay: 200,
     fetchOnScroll: false
