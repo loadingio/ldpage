@@ -12,6 +12,17 @@ Pagination library.
           .then -> return it
 ```
 
+you can process fetched data directly in the fetch function:
+
+```
+    mypal = new ldPage do
+      fetch: -> 
+        ld$.fetch '...' , {}, {type: \json}
+          .then ->
+            render(it)
+            return it
+```
+
 see src/sample.ls.
 
 
