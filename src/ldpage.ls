@@ -26,7 +26,7 @@ ldPage.prototype = Object.create(Object.prototype) <<< do
   fetchable: -> !(@disabled or @end or @running)
   is-end: -> @end
   set-host: (host) ->
-    if !host or host in [window,document,document.body] => host = document.scrollingElement
+    if !host => host = document.scrollingElement
     f = (e) ~> @on-scroll e
     if @host => @host.removeEventListener \scroll, f
     @host = (if typeof(host) == \string => document.querySelector(host) else host)
