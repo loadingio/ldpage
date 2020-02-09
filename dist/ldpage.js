@@ -114,13 +114,16 @@ ldPage.prototype = import$(Object.create(Object.prototype), {
     }
   },
   onScroll: function(){
-    var this$ = this;
+    var h, this$ = this;
     if (!this.fetchable()) {
       return;
     }
     clearTimeout(this.handle.scroll);
+    h = this.host === window
+      ? document.scrollingElement
+      : this.host;
     return this.handle.scroll = setTimeout(function(){
-      if (this$.host.scrollHeight - this$.host.scrollTop - this$.host.clientHeight > this$.opt.boundary) {
+      if (h.scrollHeight - h.scrollTop - h.clientHeight > this$.opt.boundary) {
         return;
       }
       if (this$.fetchable()) {

@@ -43,8 +43,10 @@ ldPage.prototype = Object.create(Object.prototype) <<< do
   on-scroll: ->
     if !@fetchable! => return
     clearTimeout @handle.scroll
+    # window doesn't have scrollHeight, scrollTop and clientHeight thus we fallback to scrollingElement
+    h = if @host == window => document.scrollingElement else @host
     @handle.scroll = setTimeout (~>
-      if @host.scrollHeight - @host.scrollTop - @host.clientHeight > @opt.boundary => return
+      if h.scrollHeight - h.scrollTop - h.clientHeight > @opt.boundary => return
       if @fetchable! => @fetch!then ~> @fire \scroll.fetch, it
     ), @opt.scroll-delay
 
