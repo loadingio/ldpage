@@ -35,6 +35,7 @@ see src/sample.ls.
    - should return the list fetched for ldPage to count progress.
  * fetch-delay - delay before fetching when fetch is called.
  * enabled - default true. set to false to disable fetching by default until explicitly enabled with toggle(v), 
+ * boundary - default 0. if fetch-on-scroll, fetch is triggered only if remaining space for scrolling is smaller than `boundary`. larger `boundary` makes fetch triggered earlier. 
 
 
 ## Method
