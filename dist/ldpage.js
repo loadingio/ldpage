@@ -147,6 +147,7 @@ ldPage.prototype = import$(Object.create(Object.prototype), {
       if (this$.handle.fetch) {
         clearTimeout(this$.handle.fetch);
       }
+      this$.fire('fetching');
       return this$.handle.fetch = setTimeout(function(){
         this$.running = true;
         return this$._fetch().then(function(ret){

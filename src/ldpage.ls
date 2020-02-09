@@ -55,6 +55,7 @@ ldPage.prototype = Object.create(Object.prototype) <<< do
   fetch: (opt={}) -> new Promise (res, rej) ~> # TODO clear res when clearTimeout is called
     if !@fetchable! => return res []
     if @handle.fetch => clearTimeout @handle.fetch
+    @fire \fetching
     @handle.fetch = setTimeout (~>
       @running = true
       @_fetch!then (ret = []) ~>

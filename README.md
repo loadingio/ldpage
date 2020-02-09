@@ -53,6 +53,7 @@ see src/sample.ls.
  * finish - fired when ldPage confirms that all items are fetched.
  * fetch - fired when ldPage fetch a new list of data
  * scroll.fetch - fired when ldPage fetch a new list of data triggered by scrolling. can happen along with `fetch` event.
+ * fetching - fired before fetch is called.
 
 # License
 
