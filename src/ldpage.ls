@@ -59,6 +59,7 @@ ldPage.prototype = Object.create(Object.prototype) <<< do
         ret = @parse-result ret
         @running = false
         @offset += (ret.length or 0)
+        @fire \fetch, ret
         if ret.length < @limit =>
           @fire (if !@offset => \empty else \finish)
           @end = true

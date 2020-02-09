@@ -50,7 +50,8 @@ see src/sample.ls.
 
  * empty - fired when ldPage confirms that the list is empty.
  * finish - fired when ldPage confirms that all items are fetched.
-
+ * fetch - fired when ldPage fetch a new list of data
+ * scroll.fetch - fired when ldPage fetch a new list of data triggered by scrolling. can happen along with `fetch` event.
 
 # License
 
