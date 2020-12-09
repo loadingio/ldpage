@@ -1,8 +1,11 @@
 {
-  "author": "Kirby Wu",
-  "name": "ldPage",
+  "author": "zbryikt",
+  "name": "ldpage",
   "license": "MIT",
   "description": "Pagination library",
+  "files": [
+    "dist/**/*"
+  ],
   "version": "0.0.1",
   "homepage": "https://github.com/loadingio/ldPage",
   "repository": {
