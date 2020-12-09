@@ -4,7 +4,33 @@ html
   head
     +css("assets/lib/bootstrap/main/css/bootstrap.min.css")
     +css("assets/lib/bootstrap.ldui/main/bootstrap.ldui.min.css")
+    +css("assets/lib/ldcover/main/ldcv.min.css")
+    +css("assets/lib/ldloader/main/ldld.min.css")
+    style(type="text/css"): :stylus
+      .item { opacity: 0; height: 0; transition: all .35s ease-in-out }
+      .item.active { opacity: 1; height: auto }
   body
-    h1 hi
+    .ldcv: .base.w-480: .inner.card: .card-body.p-4.text-center.text-lg: .py-4
+      h1 The End.
+      p.my-4.py-4 All content has bee delivered.
+      .btn.btn-lg.btn-primary.btn-block(data-ldcv-set="") Dismiss
+
+    .w-1024.rwd.mx-auto.my-4
+      .d-flex.align-items-center
+        .btn.btn-primary(ld="fetch") Fetch
+        .btn.btn-danger.d-none(ld="reset") Reset
+        .ml-4
+          | Total
+          b.mx-2(ld="count") 0
+          | items fetched.
+      hr
+      div(style="display:grid;grid-template-columns:repeat(4,minmax(100px,1fr));gap:1em")
+        .card.item.shadow(ld-each="item"): .card-body: div(ld="id")
+
     +script("assets/lib/@loadingio/ldquery/main/ldq.min.js")
+    +script("assets/lib/@loadingio/debounce.js/main/debounce.min.js")
     +script("assets/lib/ldview/main/ldview.min.js")
+    +script("assets/lib/ldcover/main/ldcv.min.js")
+    +script("assets/lib/ldloader/main/ldld.min.js")
+    +script("assets/lib/ldpage/dev/ldpage.min.js")
+    +script("js/index.js")
