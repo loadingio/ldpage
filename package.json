@@ -13,11 +13,29 @@
     "url": "https://github.com/loadingio/ldPage"
   },
   "engines": {
-    "node": ">=0.12.6",
-    "npm": ">=1.2.2"
+    "node": ">=10.14.1",
+    "npm": ">=6.4.1"
+  },
+  "scripts": {
+    "start": "npx server -r web"
   },
   "devDependencies": {
-    "LiveScript": ">=1.2.0",
+    "@loadingio/ldquery": "^1.1.1",
+    "bootstrap": "^4.5.3",
+    "bootstrap.ldui": "github:loadingio/bootstrap.ldui",
+    "deploy": "github:zbryikt/deploy",
+    "fedep": "0.0.8",
+    "ldview": "0.0.2",
+    "livescript": "^1.6.0",
     "uglify-js": "=3.2.0"
+  },
+  "frontendDependencies": {
+    "root": "web/static/assets/lib",
+    "modules": [
+      "bootstrap.ldui",
+      "bootstrap",
+      "@loadingio/ldquery",
+      "ldview"
+    ]
   }
 }

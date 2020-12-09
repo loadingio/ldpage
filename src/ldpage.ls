@@ -69,3 +69,5 @@ ldPage.prototype = Object.create(Object.prototype) <<< do
         res ret
     ), (opt.delay or @opt.fetch-delay or 200)
 
+if module? => module.exports = ldPage
+else if window? => window.ldPage = ldPage
