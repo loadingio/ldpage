@@ -19,10 +19,11 @@ ldPage.prototype = Object.create(Object.prototype) <<< do
   toggle: (v) -> @disabled = if v? => !v else !@disabled
   on: (n, cb) -> @evt-handler.[][n].push cb
   fire: (n, ...v) -> for cb in (@evt-handler[n] or []) => cb.apply @, v
-  init: (opt = {}) ->
+  reset: (opt = {}) ->
     for k,v of @handle => clearTimeout v
     @ <<< offset: 0, end: false
     if opt.data => @data = opt.data
+  init: (opt) -> @reset opt
   fetchable: -> !(@disabled or @end or @running)
   is-end: -> @end
   set-host: (host) ->

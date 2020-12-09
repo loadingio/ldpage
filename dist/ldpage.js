@@ -60,7 +60,7 @@
       }
       return results$;
     },
-    init: function(opt){
+    reset: function(opt){
       var k, ref$, v;
       opt == null && (opt = {});
       for (k in ref$ = this.handle) {
@@ -72,6 +72,9 @@
       if (opt.data) {
         return this.data = opt.data;
       }
+    },
+    init: function(opt){
+      return this.reset(opt);
     },
     fetchable: function(){
       return !(this.disabled || this.end || this.running);

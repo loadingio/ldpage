@@ -7,7 +7,7 @@ Pagination library.
 
 ```
     mypal = new ldPage do
-      fetch: -> 
+      fetch: ->
         ld$.fetch '...' , {}, {type: \json}
           .then -> return it
 ```
@@ -16,7 +16,7 @@ you can process fetched data directly in the fetch function:
 
 ```
     mypal = new ldPage do
-      fetch: -> 
+      fetch: ->
         ld$.fetch '...' , {}, {type: \json}
           .then ->
             render(it)
@@ -34,14 +34,15 @@ see src/sample.ls.
    - use this.limit and this.offset to control the current position of fetch progress.
    - should return the list fetched for ldPage to count progress.
  * fetch-delay - delay before fetching when fetch is called.
- * enabled - default true. set to false to disable fetching by default until explicitly enabled with toggle(v), 
- * boundary - default 0. if fetch-on-scroll, fetch is triggered only if remaining space for scrolling is smaller than `boundary`. larger `boundary` makes fetch triggered earlier. 
+ * enabled - default true. set to false to disable fetching by default until explicitly enabled with toggle(v),
+ * boundary - default 0. if fetch-on-scroll, fetch is triggered only if remaining space for scrolling is smaller than `boundary`. larger `boundary` makes fetch triggered earlier.
 
 
 ## Method
 
- * init(opt) - reset page. opt:
+ * reset(opt) - reset page. opt:
    - data - data for use in this bunch of fetch.
+ * init(opt) - reset page. deprecated. ( use reset instead )
  * fetch - fetch data again.
  * setHost(node) - set scrolling host. for entire document, use `window`.
  * toggle(v) - flip enabled/disabled statue. force set to v if v(true or false) is provided.
