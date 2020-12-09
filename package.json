@@ -1,6 +1,6 @@
 {
   "author": "zbryikt",
-  "name": "ldpage",
+  "name": "@loadingio/ldpage",
   "license": "MIT",
   "description": "Pagination library",
   "files": [
