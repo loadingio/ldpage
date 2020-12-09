@@ -44,6 +44,7 @@ see src/sample.ls.
    - data - data for use in this bunch of fetch.
  * init(opt) - reset page. deprecated. ( use reset instead )
  * fetch - fetch data again.
+ * isEnd - is there anything to fetch.
  * setHost(node) - set scrolling host. for entire document, use `window`.
  * toggle(v) - flip enabled/disabled statue. force set to v if v(true or false) is provided.
 
