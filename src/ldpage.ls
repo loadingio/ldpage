@@ -65,8 +65,8 @@ ldPage.prototype = Object.create(Object.prototype) <<< do
         @offset += (ret.length or 0)
         @fire \fetch, ret
         if ret.length < @limit =>
-          @fire (if !@offset => \empty else \finish)
           @end = true
+          @fire (if !@offset => \empty else \finish)
         res ret
     ), (opt.delay or @opt.fetch-delay or 200)
 
