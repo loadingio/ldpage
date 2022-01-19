@@ -1,4 +1,4 @@
-# ldPage
+# ldpage
 
 Pagination library.
 
@@ -6,7 +6,7 @@ Pagination library.
 # Usage
 
 ```
-    mypal = new ldPage do
+    mypal = new ldpage do
       fetch: ->
         ld$.fetch '...' , {}, {type: \json}
           .then -> return it
@@ -15,7 +15,7 @@ Pagination library.
 you can process fetched data directly in the fetch function:
 
 ```
-    mypal = new ldPage do
+    mypal = new ldpage do
       fetch: ->
         ld$.fetch '...' , {}, {type: \json}
           .then ->
@@ -29,10 +29,10 @@ see src/sample.ls.
 ## Configuration
 
  * host - scrolling host. for entire document, use `window`.
- * fetch-on-scroll - should ldPage fetch data when scrolling to the bottom of the host. default false.
- * fetch - custom function to fetch data according to ldPage's status.
+ * fetch-on-scroll - should ldpage fetch data when scrolling to the bottom of the host. default false.
+ * fetch - custom function to fetch data according to ldpage's status.
    - use this.limit and this.offset to control the current position of fetch progress.
-   - should return the list fetched for ldPage to count progress.
+   - should return the list fetched for ldpage to count progress.
  * fetch-delay - delay before fetching when fetch is called.
  * enabled - default true. set to false to disable fetching by default until explicitly enabled with toggle(v),
  * boundary - default 0. if fetch-on-scroll, fetch is triggered only if remaining space for scrolling is smaller than `boundary`. larger `boundary` makes fetch triggered earlier.
@@ -51,10 +51,10 @@ see src/sample.ls.
 
 ## Events
 
- * empty - fired when ldPage confirms that the list is empty.
- * finish - fired when ldPage confirms that all items are fetched.
- * fetch - fired when ldPage fetch a new list of data
- * scroll.fetch - fired when ldPage fetch a new list of data triggered by scrolling. can happen along with `fetch` event.
+ * empty - fired when ldpage confirms that the list is empty.
+ * finish - fired when ldpage confirms that all items are fetched.
+ * fetch - fired when ldpage fetch a new list of data
+ * scroll.fetch - fired when ldpage fetch a new list of data triggered by scrolling. can happen along with `fetch` event.
  * fetching - fired before fetch is called.
 
 # License

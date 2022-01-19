@@ -2,7 +2,7 @@ var lc, view, ldld, ldcv, page;
 lc = {
   list: []
 };
-view = new ldView({
+view = new ldview({
   root: document.body,
   text: {
     count: function(){
@@ -45,13 +45,13 @@ view = new ldView({
     }
   }
 });
-ldld = new ldLoader({
+ldld = new ldloader({
   className: 'ldld full'
 });
-ldcv = new ldCover({
+ldcv = new ldcover({
   root: '.ldcv'
 });
-page = new ldPage({
+page = new ldpage({
   fetch: function(){
     var this$ = this;
     ldld.on();

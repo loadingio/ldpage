@@ -1,6 +1,6 @@
 lc = {list: []}
 
-view = new ldView do
+view = new ldview do
   root: document.body
   text: count: -> lc.list.length
   handler: do
@@ -22,10 +22,10 @@ view = new ldView do
       lc.list = []
       view.render!
 
-ldld = new ldLoader className: 'ldld full'
-ldcv = new ldCover root: '.ldcv'
+ldld = new ldloader className: 'ldld full'
+ldcv = new ldcover root: '.ldcv'
 
-page = new ldPage do
+page = new ldpage do
   fetch: ->
     ldld.on!
     debounce 1000
