@@ -1,4 +1,4 @@
-ldpage = (opt = {}) ->
+paginate = (opt = {}) ->
   if opt.fetch => @_fetch = opt.fetch; delete opt.fetch
   @ <<< {
     _evthdr: {}
@@ -22,7 +22,7 @@ ldpage = (opt = {}) ->
   if @_o.host => @set-host that
   @
 
-ldpage.prototype = Object.create(Object.prototype) <<< do
+paginate.prototype = Object.create(Object.prototype) <<< do
   # should be overwritten
   _fetch: -> new Promise (res, rej) -> return res []
   toggle: (v) -> @disabled = if v? => !v else !@disabled
@@ -79,5 +79,5 @@ ldpage.prototype = Object.create(Object.prototype) <<< do
         res ret
     ), (opt.delay or @_o.fetch-delay or 200)
 
-if module? => module.exports = ldpage
-else if window? => window.ldpage = ldpage
+if module? => module.exports = paginate
+else if window? => window.paginate = paginate
