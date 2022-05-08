@@ -10,7 +10,7 @@
     }
     this._evthdr = {};
     this.data = {};
-    this.handle = {};
+    this.hdl = {};
     this.offset = 0;
     this.running = false;
     this.end = false;
@@ -66,7 +66,7 @@
     reset: function(opt){
       var k, ref$, v;
       opt == null && (opt = {});
-      for (k in ref$ = this.handle) {
+      for (k in ref$ = this.hdl) {
         v = ref$[k];
         clearTimeout(v);
       }
@@ -129,11 +129,11 @@
       if (!this.fetchable()) {
         return;
       }
-      clearTimeout(this.handle.scroll);
+      clearTimeout(this.hdl.scroll);
       h = this.host === window
         ? document.scrollingElement
         : this.host;
-      return this.handle.scroll = setTimeout(function(){
+      return this.hdl.scroll = setTimeout(function(){
         if (h.scrollHeight - h.scrollTop - h.clientHeight > this$._o.boundary) {
           return;
         }
@@ -155,11 +155,11 @@
         if (!this$.fetchable()) {
           return res([]);
         }
-        if (this$.handle.fetch) {
-          clearTimeout(this$.handle.fetch);
+        if (this$.hdl.fetch) {
+          clearTimeout(this$.hdl.fetch);
         }
         this$.fire('fetching');
-        return this$.handle.fetch = setTimeout(function(){
+        return this$.hdl.fetch = setTimeout(function(){
           this$.running = true;
           return this$._fetch().then(function(ret){
             ret == null && (ret = []);
