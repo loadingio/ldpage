@@ -8,14 +8,14 @@
       this._fetch = opt.fetch;
       delete opt.fetch;
     }
-    this.evtHandler = {};
+    this._evthdr = {};
     this.data = {};
     this.handle = {};
     this.offset = 0;
     this.running = false;
     this.end = false;
     this.disabled = opt.enabled != null ? !opt.enabled : false;
-    this.opt = import$({
+    this._o = import$({
       boundary: 0,
       limit: 20,
       offset: 0,
@@ -23,9 +23,9 @@
       fetchDelay: 200,
       fetchOnScroll: false
     }, opt);
-    this.limit = (ref$ = this.opt).limit;
+    this.limit = (ref$ = this._o).limit;
     this.offset = ref$.offset;
-    if (that = this.opt.host) {
+    if (that = this._o.host) {
       this.setHost(that);
     }
     return this;
@@ -33,9 +33,7 @@
   ldpage.prototype = import$(Object.create(Object.prototype), {
     _fetch: function(){
       return new Promise(function(res, rej){
-        return res({
-          payload: []
-        });
+        return res([]);
       });
     },
     toggle: function(v){
@@ -44,8 +42,13 @@
         : !this.disabled;
     },
     on: function(n, cb){
-      var ref$;
-      return ((ref$ = this.evtHandler)[n] || (ref$[n] = [])).push(cb);
+      var this$ = this;
+      return (Array.isArray(n)
+        ? n
+        : [n]).map(function(n){
+        var ref$;
+        return ((ref$ = this$._evthdr)[n] || (ref$[n] = [])).push(cb);
+      });
     },
     fire: function(n){
       var v, res$, i$, to$, ref$, len$, cb, results$ = [];
@@ -54,7 +57,7 @@
         res$.push(arguments[i$]);
       }
       v = res$;
-      for (i$ = 0, len$ = (ref$ = this.evtHandler[n] || []).length; i$ < len$; ++i$) {
+      for (i$ = 0, len$ = (ref$ = this._evthdr[n] || []).length; i$ < len$; ++i$) {
         cb = ref$[i$];
         results$.push(cb.apply(this, v));
       }
@@ -98,12 +101,12 @@
         this.host = null;
         return;
       }
-      if (this.opt.fetchOnScroll && !this.opt.pivot) {
+      if (this._o.fetchOnScroll && !this._o.pivot) {
         return this.host.addEventListener('scroll', f);
       }
-      if (this.opt.pivot) {
+      if (this._o.pivot) {
         if (this.obs) {
-          this.obs.unobserve(this.opt.pivot);
+          this.obs.unobserve(this._o.pivot);
         }
         update = function(ns){
           if (!(ns.map(function(it){
@@ -118,7 +121,7 @@
           });
         };
         this.obs = new IntersectionObserver(update, {});
-        return this.obs.observe(this.opt.pivot);
+        return this.obs.observe(this._o.pivot);
       }
     },
     onScroll: function(){
@@ -131,7 +134,7 @@
         ? document.scrollingElement
         : this.host;
       return this.handle.scroll = setTimeout(function(){
-        if (h.scrollHeight - h.scrollTop - h.clientHeight > this$.opt.boundary) {
+        if (h.scrollHeight - h.scrollTop - h.clientHeight > this$._o.boundary) {
           return;
         }
         if (this$.fetchable()) {
@@ -139,7 +142,7 @@
             return this$.fire('scroll.fetch', it);
           });
         }
-      }, this.opt.scrollDelay);
+      }, this._o.scrollDelay);
     },
     setLoader: function(){},
     parseResult: function(it){
@@ -170,7 +173,7 @@
             }
             return res(ret);
           });
-        }, opt.delay || this$.opt.fetchDelay || 200);
+        }, opt.delay || this$._o.fetchDelay || 200);
       });
     }
   });

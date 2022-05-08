@@ -1,24 +1,33 @@
 ldpage = (opt = {}) ->
   if opt.fetch => @_fetch = opt.fetch; delete opt.fetch
   @ <<< {
-    evt-handler: {}, data: {},
-    handle: {}, offset: 0, running: false, end: false
-    # we use disabled to better semantic align with `running` and `end`
+    _evthdr: {}
+    data: {}
+    handle: {}
+    offset: 0
+    running: false
+    end: false
+    # we use `disabled to better semantic align with `running` and `end`
     disabled: (if opt.enabled? => !opt.enabled else false)
   }
-  @opt = {
-    boundary: 0, limit: 20, offset: 0, scroll-delay: 100, fetch-delay: 200, fetch-on-scroll: false
+  @_o = {
+    boundary: 0
+    limit: 20
+    offset: 0
+    scroll-delay: 100
+    fetch-delay: 200
+    fetch-on-scroll: false
   } <<< opt
-  @ <<< @opt{limit, offset}
-  if @opt.host => @set-host that
+  @ <<< @_o{limit, offset}
+  if @_o.host => @set-host that
   @
 
 ldpage.prototype = Object.create(Object.prototype) <<< do
   # should be overwritten
-  _fetch: -> new Promise (res, rej) -> return res {payload: []}
+  _fetch: -> new Promise (res, rej) -> return res []
   toggle: (v) -> @disabled = if v? => !v else !@disabled
-  on: (n, cb) -> @evt-handler.[][n].push cb
-  fire: (n, ...v) -> for cb in (@evt-handler[n] or []) => cb.apply @, v
+  on: (n, cb) -> (if Array.isArray(n) => n else [n]).map (n) ~> @_evthdr.[][n].push cb
+  fire: (n, ...v) -> for cb in (@_evthdr[n] or []) => cb.apply @, v
   reset: (opt = {}) ->
     for k,v of @handle => clearTimeout v
     @ <<< offset: 0, end: false
@@ -32,14 +41,14 @@ ldpage.prototype = Object.create(Object.prototype) <<< do
     if @host => @host.removeEventListener \scroll, f
     @host = (if typeof(host) == \string => document.querySelector(host) else host)
     if !@host => @host = null; return
-    if @opt.fetch-on-scroll and !@opt.pivot => return @host.addEventListener \scroll, f
-    if @opt.pivot =>
-      if @obs => @obs.unobserve @opt.pivot
+    if @_o.fetch-on-scroll and !@_o.pivot => return @host.addEventListener \scroll, f
+    if @_o.pivot =>
+      if @obs => @obs.unobserve @_o.pivot
       update = (ns) ~>
         if !( ns.map(->it.isIntersecting).filter(->it).length and @fetchable! ) => return
         @fetch!then ~> @fire \scroll.fetch, it
       @obs = new IntersectionObserver update, {}
-      @obs.observe @opt.pivot
+      @obs.observe @_o.pivot
 
   on-scroll: ->
     if !@fetchable! => return
@@ -47,9 +56,9 @@ ldpage.prototype = Object.create(Object.prototype) <<< do
     # window doesn't have scrollHeight, scrollTop and clientHeight thus we fallback to scrollingElement
     h = if @host == window => document.scrollingElement else @host
     @handle.scroll = setTimeout (~>
-      if h.scrollHeight - h.scrollTop - h.clientHeight > @opt.boundary => return
+      if h.scrollHeight - h.scrollTop - h.clientHeight > @_o.boundary => return
       if @fetchable! => @fetch!then ~> @fire \scroll.fetch, it
-    ), @opt.scroll-delay
+    ), @_o.scroll-delay
 
   set-loader: ->
   parse-result: -> it
@@ -68,7 +77,7 @@ ldpage.prototype = Object.create(Object.prototype) <<< do
           @end = true
           @fire (if !@offset => \empty else \finish)
         res ret
-    ), (opt.delay or @opt.fetch-delay or 200)
+    ), (opt.delay or @_o.fetch-delay or 200)
 
 if module? => module.exports = ldpage
 else if window? => window.ldpage = ldpage
