@@ -50,6 +50,8 @@ see `src/sample.ls`.
    - omitted if `fetchOnScroll` is false.
    - larger `boundary` makes fetch triggered earlier.
  - `host`: container that scrolls. default `document.scrollingElement`.
+ - `pivot`: element for determining if we should scroll. omitted if not provided.
+   - when provided, `intersectionObserver` is used
  - `fetch`: required custom function to fetch data according to ldpage's status.
    - when called, - use `this.limit` and `this.offset` for current position of fetch progress.
    - should return an Array. ldpage use it to update `this.offset` and count progress.
