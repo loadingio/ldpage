@@ -6,7 +6,7 @@ echo "build src/index.ls -> dist/index.js ..."
 echo "minifying index.js ..."
 ./node_modules/.bin/uglifyjs dist/index.js -m -c > dist/index.min.js
 echo "copy dist to web ..."
-rm -rf web/static/assets/lib/ldpage/dev/
-mkdir -p web/static/assets/lib/ldpage/dev/
-cp -R dist/* web/static/assets/lib/ldpage/dev/
+rm -rf web/static/assets/lib/@loadingio/paginate/dev/
+mkdir -p web/static/assets/lib/@loadingio/paginate/dev/
+cp -R dist/* web/static/assets/lib/@loadingio/paginate/dev/
 echo "done."
