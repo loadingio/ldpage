@@ -45,7 +45,8 @@ see `src/sample.ls`.
  - `scrollDelay`: default 100. debounce time (ms) before fetching after scrolled.
  - `fetchDelay`: default 200. debounce time (ms) before fetching when fetch is called.
  - `fetchOnScroll`: default false. when true, fetch when scrolling to the bottom of `host`.
- - `boundary`: defaul 0. threshold of the distance to `host` bottom to trigger fetch.
+ - `boundary`: threshold of the distance to `host` bottom to trigger fetch.
+   - default 5. rounding may lead to extra px uncounted so a small default value 5 is used here.
    - omitted if `fetchOnScroll` is false.
    - larger `boundary` makes fetch triggered earlier.
  - `host`: container that scrolls. default `document.scrollingElement`.

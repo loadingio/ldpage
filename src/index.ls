@@ -11,7 +11,7 @@ paginate = (opt = {}) ->
     disabled: (if opt.enabled? => !opt.enabled else false)
   }
   @_o = {
-    boundary: 0
+    boundary: 5
     limit: 20
     offset: 0
     scroll-delay: 100

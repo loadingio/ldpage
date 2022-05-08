@@ -16,7 +16,7 @@
     this.end = false;
     this.disabled = opt.enabled != null ? !opt.enabled : false;
     this._o = import$({
-      boundary: 0,
+      boundary: 5,
       limit: 20,
       offset: 0,
       scrollDelay: 100,
