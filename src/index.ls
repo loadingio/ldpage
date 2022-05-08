@@ -20,7 +20,7 @@ paginate = (opt = {}) ->
     fetch-on-scroll: false
   } <<< opt
   @ <<< @_o{limit, offset}
-  @set-host(@_o.host or document.scrollingElement)
+  if @_o.host => @set-host @_o.host
   @
 
 paginate.prototype = Object.create(Object.prototype) <<< do
@@ -38,11 +38,11 @@ paginate.prototype = Object.create(Object.prototype) <<< do
   is-end: -> @end
   set-host: (host) ->
     if !host => host = document.scrollingElement
-    f = (e) ~> @on-scroll e
-    if @host => @host.removeEventListener \scroll, f
+    if @host and @_scroll-func => @host.removeEventListener \scroll, @_scroll-func
+    @_scroll-func = (e) ~> @on-scroll e
     @host = (if typeof(host) == \string => document.querySelector(host) else host)
     if !@host => @host = null; return
-    if @_o.fetch-on-scroll and !@_o.pivot => @host.addEventListener \scroll, f
+    if @_o.fetch-on-scroll and !@_o.pivot => @host.addEventListener \scroll, @_scroll-func
 
     update = (ns) ~>
       if !( ns.map(->it.isIntersecting).filter(->it).length and @fetchable! ) => return

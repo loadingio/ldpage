@@ -25,7 +25,9 @@
     }, opt);
     this.limit = (ref$ = this._o).limit;
     this.offset = ref$.offset;
-    this.setHost(this._o.host || document.scrollingElement);
+    if (this._o.host) {
+      this.setHost(this._o.host);
+    }
     return this;
   };
   paginate.prototype = import$(Object.create(Object.prototype), {
@@ -84,23 +86,23 @@
       return this.end;
     },
     setHost: function(host){
-      var f, update, this$ = this;
+      var update, this$ = this;
       if (!host) {
         host = document.scrollingElement;
       }
-      f = function(e){
+      if (this.host && this._scrollFunc) {
+        this.host.removeEventListener('scroll', this._scrollFunc);
+      }
+      this._scrollFunc = function(e){
         return this$.onScroll(e);
       };
-      if (this.host) {
-        this.host.removeEventListener('scroll', f);
-      }
       this.host = typeof host === 'string' ? document.querySelector(host) : host;
       if (!this.host) {
         this.host = null;
         return;
       }
       if (this._o.fetchOnScroll && !this._o.pivot) {
-        this.host.addEventListener('scroll', f);
+        this.host.addEventListener('scroll', this._scrollFunc);
       }
       update = function(ns){
         if (!(ns.map(function(it){
