@@ -11,6 +11,7 @@ paginate = (opt = {}) ->
     disabled: (if opt.enabled? => !opt.enabled else false)
   }
   @_o = {
+    # https://stackoverflow.com/questions/3898130/#comment92747215_34550171
     boundary: 5
     limit: 20
     offset: 0
