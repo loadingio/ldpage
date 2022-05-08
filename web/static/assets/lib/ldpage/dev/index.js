@@ -144,10 +144,6 @@
         }
       }, this._o.scrollDelay);
     },
-    setLoader: function(){},
-    parseResult: function(it){
-      return it;
-    },
     fetch: function(opt){
       var this$ = this;
       opt == null && (opt = {});
@@ -163,7 +159,6 @@
           this$.running = true;
           return this$._fetch().then(function(ret){
             ret == null && (ret = []);
-            ret = this$.parseResult(ret);
             this$.running = false;
             this$.offset += ret.length || 0;
             this$.fire('fetch', ret);

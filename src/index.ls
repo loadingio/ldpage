@@ -63,8 +63,6 @@ paginate.prototype = Object.create(Object.prototype) <<< do
       if @fetchable! => @fetch!then ~> @fire \scroll.fetch, it
     ), @_o.scroll-delay
 
-  set-loader: ->
-  parse-result: -> it
   fetch: (opt={}) -> new Promise (res, rej) ~> # TODO clear res when clearTimeout is called
     if !@fetchable! => return res []
     if @_hdl.fetch => clearTimeout @_hdl.fetch
@@ -72,7 +70,6 @@ paginate.prototype = Object.create(Object.prototype) <<< do
     @_hdl.fetch = setTimeout (~>
       @running = true
       @_fetch!then (ret = []) ~>
-        ret = @parse-result ret
         @running = false
         @offset += (ret.length or 0)
         @fire \fetch, ret
