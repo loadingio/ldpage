@@ -2,8 +2,8 @@ paginate = (opt = {}) ->
   if opt.fetch => @_fetch = opt.fetch; delete opt.fetch
   @ <<< {
     _evthdr: {}
+    _hdl: {}
     data: {}
-    hdl: {}
     offset: 0
     running: false
     end: false
@@ -30,7 +30,7 @@ paginate.prototype = Object.create(Object.prototype) <<< do
   on: (n, cb) -> (if Array.isArray(n) => n else [n]).map (n) ~> @_evthdr.[][n].push cb
   fire: (n, ...v) -> for cb in (@_evthdr[n] or []) => cb.apply @, v
   reset: (opt = {}) ->
-    for k,v of @hdl => clearTimeout v
+    for k,v of @_hdl => clearTimeout v
     @ <<< offset: 0, end: false
     if opt.data => @data = opt.data
   init: (opt) -> @reset opt
@@ -55,10 +55,10 @@ paginate.prototype = Object.create(Object.prototype) <<< do
 
   on-scroll: ->
     if !@fetchable! => return
-    clearTimeout @hdl.scroll
+    clearTimeout @_hdl.scroll
     # window doesn't have scrollHeight, scrollTop and clientHeight thus we fallback to scrollingElement
     h = if @host == window => document.scrollingElement else @host
-    @hdl.scroll = setTimeout (~>
+    @_hdl.scroll = setTimeout (~>
       if h.scrollHeight - h.scrollTop - h.clientHeight > @_o.boundary => return
       if @fetchable! => @fetch!then ~> @fire \scroll.fetch, it
     ), @_o.scroll-delay
@@ -67,9 +67,9 @@ paginate.prototype = Object.create(Object.prototype) <<< do
   parse-result: -> it
   fetch: (opt={}) -> new Promise (res, rej) ~> # TODO clear res when clearTimeout is called
     if !@fetchable! => return res []
-    if @hdl.fetch => clearTimeout @hdl.fetch
+    if @_hdl.fetch => clearTimeout @_hdl.fetch
     @fire \fetching
-    @hdl.fetch = setTimeout (~>
+    @_hdl.fetch = setTimeout (~>
       @running = true
       @_fetch!then (ret = []) ~>
         ret = @parse-result ret
