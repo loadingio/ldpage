@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.1.0 (upcoming)
+
+ - rename module to `@loadingio/paginate`
+
+
 ## v0.0.4
 
  - rename `ldPage` to `ldpage`

@@ -1,6 +1,6 @@
 {
   "author": "zbryikt",
-  "name": "@loadingio/ldpage",
+  "name": "@loadingio/paginate",
   "license": "MIT",
   "description": "Pagination library",
   "browser": "dist/index.min.js",
@@ -8,11 +8,11 @@
   "files": [
     "dist/**/*"
   ],
-  "version": "0.0.4",
-  "homepage": "https://github.com/loadingio/ldpage",
+  "version": "0.1.0",
+  "homepage": "https://github.com/loadingio/paginate",
   "repository": {
     "type": "git",
-    "url": "https://github.com/loadingio/ldpage"
+    "url": "https://github.com/loadingio/paginate"
   },
   "engines": {
     "node": ">=10.14.1",
