@@ -1,5 +1,5 @@
 paginate = (opt = {}) ->
-  if opt.fetch => @_fetch = opt.fetch; delete opt.fetch
+  if opt.fetch => @_user_fetch = opt.fetch; delete opt.fetch
   @ <<< {
     _evthdr: {}
     _hdl: {}
@@ -21,11 +21,13 @@ paginate = (opt = {}) ->
   } <<< opt
   @ <<< @_o{limit, offset}
   if @_o.host => @set-host @_o.host
+  #@fetch = debounce @_o.fetch-delay, ~> @_fetch.apply @, arguments
+  @fetch = debounce @_o.fetch-delay, @_fetch
   @
 
 paginate.prototype = Object.create(Object.prototype) <<< do
   # should be overwritten
-  _fetch: -> new Promise (res, rej) -> return res []
+  _user_fetch: -> new Promise (res, rej) -> return res []
   toggle: (v) -> @disabled = if v? => !v else !@disabled
   on: (n, cb) -> (if Array.isArray(n) => n else [n]).map (n) ~> @_evthdr.[][n].push cb
   fire: (n, ...v) -> for cb in (@_evthdr[n] or []) => cb.apply @, v
@@ -63,13 +65,26 @@ paginate.prototype = Object.create(Object.prototype) <<< do
       if @fetchable! => @fetch!then ~> @fire \scroll.fetch, it
     ), @_o.scroll-delay
 
-  fetch: (opt={}) -> new Promise (res, rej) ~> # TODO clear res when clearTimeout is called
+  _fetch: (opt={}) ->
+    if !@fetchable! => return res []
+    @fire \fetching
+    @running = true
+    @_user_fetch!then (r = []) ~>
+      @running = false
+      @offset += (r.length or 0)
+      @fire \fetch, r
+      if r.length < @limit =>
+        @end = true
+        @fire (if !@offset => \empty else \finish)
+      return r
+
+  _fetchx: (opt={}) -> new Promise (res, rej) ~> # TODO clear res when clearTimeout is called
     if !@fetchable! => return res []
     if @_hdl.fetch => clearTimeout @_hdl.fetch
     @fire \fetching
     @_hdl.fetch = setTimeout (~>
       @running = true
-      @_fetch!then (ret = []) ~>
+      @_user_fetch!then (ret = []) ~>
         @running = false
         @offset += (ret.length or 0)
         @fire \fetch, ret

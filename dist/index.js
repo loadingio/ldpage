@@ -5,7 +5,7 @@
     var ref$;
     opt == null && (opt = {});
     if (opt.fetch) {
-      this._fetch = opt.fetch;
+      this._user_fetch = opt.fetch;
       delete opt.fetch;
     }
     this._evthdr = {};
@@ -28,10 +28,11 @@
     if (this._o.host) {
       this.setHost(this._o.host);
     }
+    this.fetch = debounce(this._o.fetchDelay, this._fetch);
     return this;
   };
   paginate.prototype = import$(Object.create(Object.prototype), {
-    _fetch: function(){
+    _user_fetch: function(){
       return new Promise(function(res, rej){
         return res([]);
       });
@@ -144,7 +145,27 @@
         }
       }, this._o.scrollDelay);
     },
-    fetch: function(opt){
+    _fetch: function(opt){
+      var this$ = this;
+      opt == null && (opt = {});
+      if (!this.fetchable()) {
+        return res([]);
+      }
+      this.fire('fetching');
+      this.running = true;
+      return this._user_fetch().then(function(r){
+        r == null && (r = []);
+        this$.running = false;
+        this$.offset += r.length || 0;
+        this$.fire('fetch', r);
+        if (r.length < this$.limit) {
+          this$.end = true;
+          this$.fire(!this$.offset ? 'empty' : 'finish');
+        }
+        return r;
+      });
+    },
+    _fetchx: function(opt){
       var this$ = this;
       opt == null && (opt = {});
       return new Promise(function(res, rej){
@@ -157,7 +178,7 @@
         this$.fire('fetching');
         return this$._hdl.fetch = setTimeout(function(){
           this$.running = true;
-          return this$._fetch().then(function(ret){
+          return this$._user_fetch().then(function(ret){
             ret == null && (ret = []);
             this$.running = false;
             this$.offset += ret.length || 0;
