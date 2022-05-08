@@ -1,98 +1,99 @@
-paginate = (opt = {}) ->
-  if opt.fetch => @_user_fetch = opt.fetch; delete opt.fetch
+paginate = (o = {}) ->
+  if o.fetch => @_user_fetch = o.fetch
   @ <<< {
     _evthdr: {}
-    _hdl: {}
-    data: {}
-    offset: 0
-    running: false
-    end: false
+    _running: false
+    _end: false
     # we use `disabled to better semantic align with `running` and `end`
-    disabled: (if opt.enabled? => !opt.enabled else false)
+    _disabled: (if o.enabled? => !o.enabled else false)
   }
   @_o = {
     # https://stackoverflow.com/questions/3898130/#comment92747215_34550171
     boundary: 5
-    limit: 20
-    offset: 0
     scroll-delay: 100
     fetch-delay: 200
     fetch-on-scroll: false
-  } <<< opt
-  @ <<< @_o{limit, offset}
-  if @_o.host => @set-host @_o.host
-  #@fetch = debounce @_o.fetch-delay, ~> @_fetch.apply @, arguments
+    fetch-on-init: false
+  } <<< o
+  @ <<< limit: o.limit or 20, offset: o.offset or 0
+  if o.host => @host o.host
+  if o.pivot => @pivot o.pivot
   @fetch = debounce @_o.fetch-delay, @_fetch
+  @_pend = proxise ~> if !@_running => Promise.resolve!
+  if @_o.fetch-on-init in <[always once]> => @fetch!
   @
 
 paginate.prototype = Object.create(Object.prototype) <<< do
-  # should be overwritten
   _user_fetch: -> new Promise (res, rej) -> return res []
-  toggle: (v) -> @disabled = if v? => !v else !@disabled
+  toggle: (v) -> @_disabled = if v? => !v else !@_disabled
   on: (n, cb) -> (if Array.isArray(n) => n else [n]).map (n) ~> @_evthdr.[][n].push cb
   fire: (n, ...v) -> for cb in (@_evthdr[n] or []) => cb.apply @, v
-  reset: (opt = {}) ->
-    for k,v of @_hdl => clearTimeout v
-    @ <<< offset: 0, end: false
-    if opt.data => @data = opt.data
-  init: (opt) -> @reset opt
-  fetchable: -> !(@disabled or @end or @running)
-  is-end: -> @end
-  set-host: (host) ->
-    if !host => host = document.scrollingElement
-    if @host and @_scroll-func => @host.removeEventListener \scroll, @_scroll-func
-    @_scroll-func = (e) ~> @on-scroll e
-    @host = (if typeof(host) == \string => document.querySelector(host) else host)
-    if !@host => @host = null; return
-    if @_o.fetch-on-scroll and !@_o.pivot => @host.addEventListener \scroll, @_scroll-func
+  reset: (o = {}) ->
+    @_pend!then ~>
+      @ <<< offset: 0, _end: false
+      if @_o.fetch-on-init == \always => @fetch!
+  fetchable: -> !(@_disabled or @_end or @_running)
+  is-end: -> @_end
 
+  obs: ->
+    if @_obs => return @_obs
     update = (ns) ~>
       if !( ns.map(->it.isIntersecting).filter(->it).length and @fetchable! ) => return
-      @fetch!then ~> @fire \scroll.fetch, it
+      p = ns.filter(~> it.target == @_pivot).length
+      h = ns.filter(~> it.target == @_host).length
+      if (
+        (@_o.fetch-on-scroll and p) or
+        (@_o.fetch-on-init == \lazy and h and !@offset)
+      ) => @fetch!then ~> @fire \scroll.fetch, it
+    @_obs = new IntersectionObserver update, {}
+    return @_obs
 
-    if @obs and @_o.pivot => @obs.unobserve @_o.pivot
-    if @_o.pivot =>
-      @obs = new IntersectionObserver update, {}
-      @obs.observe @_o.pivot
-
-  on-scroll: ->
+  _on-scroll: ->
     if !@fetchable! => return
-    clearTimeout @_hdl.scroll
-    # window doesn't have scrollHeight, scrollTop and clientHeight thus we fallback to scrollingElement
-    h = if @host == window => document.scrollingElement else @host
-    @_hdl.scroll = setTimeout (~>
-      if h.scrollHeight - h.scrollTop - h.clientHeight > @_o.boundary => return
-      if @fetchable! => @fetch!then ~> @fire \scroll.fetch, it
-    ), @_o.scroll-delay
+    h = @_host
+    if h.scrollHeight - h.scrollTop - h.clientHeight > @_o.boundary => return
+    @fetch!then ~> @fire \scroll.fetch, it
+
+  host: (h) ->
+    if !h => return @_host
+    obs = @obs!
+    if @_host and @_scroll-func =>
+      n = if @_host == document.scrollingElement => document else @_host
+      n.removeEventListener \scroll, @_scroll-func
+      @_scroll-func = null
+    if @_host => obs.unobserve @_host
+    @_host = (if typeof(h) == \string => document.querySelector(h) else h)
+    if !@_host => return
+    if @_o.fetch-on-scroll and !@_pivot =>
+      @_scroll-func = (e) ~> @_on-scroll e
+      n = if @_host == document.scrollingElement => document else @_host
+      n.addEventListener \scroll, @_scroll-func
+    obs.observe @_host
+
+  pivot: (p) ->
+    if !p => return @_pivot
+    obs = @obs!
+    if @_pivot => obs.unobserve @_pivot
+    @_pivot = (if typeof(p) == \string => document.querySelector(p) else p)
+    obs.observe (@_pivot = p)
+    if @_host and @_scroll-func =>
+      n = if @_host == document.scrollingElement => document else @_host
+      n.removeEventListener \scroll, @_scroll-func
+      @_scroll-func = null
 
   _fetch: (opt={}) ->
     if !@fetchable! => return res []
     @fire \fetching
-    @running = true
+    @_running = true
     @_user_fetch!then (r = []) ~>
-      @running = false
+      @_running = false
       @offset += (r.length or 0)
       @fire \fetch, r
       if r.length < @limit =>
-        @end = true
+        @_end = true
         @fire (if !@offset => \empty else \finish)
+      @_pend.resolve!
       return r
-
-  _fetchx: (opt={}) -> new Promise (res, rej) ~> # TODO clear res when clearTimeout is called
-    if !@fetchable! => return res []
-    if @_hdl.fetch => clearTimeout @_hdl.fetch
-    @fire \fetching
-    @_hdl.fetch = setTimeout (~>
-      @running = true
-      @_user_fetch!then (ret = []) ~>
-        @running = false
-        @offset += (ret.length or 0)
-        @fire \fetch, ret
-        if ret.length < @limit =>
-          @end = true
-          @fire (if !@offset => \empty else \finish)
-        res ret
-    ), (opt.delay or @_o.fetch-delay or 200)
 
 if module? => module.exports = paginate
 else if window? => window.paginate = paginate

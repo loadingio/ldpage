@@ -1,9 +1,17 @@
 # Change Logs
 
-## v0.1.0 (upcoming)
+## v0.1.0
 
  - rename module to `@loadingio/paginate`. export `paginate` instead of `ldpage`
  - upgrade dependencies to fix vulnerabilities
+ - refactoring with concise configs and simpler APIs.
+   - `init` removed
+   - internal vairables prefixed with `_`
+   - rename `setHost` to `host`
+ - support debounce based on `@loadingio/debounce.js`
+ - blocking `reset` by `fetch` based on `proxise`
+ - add `fetchOnInit` option
+ - update documentation
 
 
 ## v0.0.4

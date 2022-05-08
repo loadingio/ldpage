@@ -1,11 +1,14 @@
 doctype html
 html
   include @/@loadingio/bootstrap.ext/index.pug
+  include @/ldview/index.pug
   head
-    +css("assets/lib/bootstrap/main/dist/css/bootstrap.min.css")
-    +css("assets/lib/@loadingio/bootstrap.ext/main/index.min.css")
-    +css("assets/lib/ldcover/main/index.min.css")
-    +css("assets/lib/ldloader/main/index.min.css")
+    +css([
+      {name: "bootstrap", path: "dist/css/bootstrap.min.css"},
+      {name: "@loadingio/bootstrap.ext"},
+      {name: "ldcover"},
+      {name: "ldloader"}
+    ])
     style(type="text/css"): :stylus
       .item { opacity: 0; height: 0; transition: all .35s ease-in-out }
       .item.active { opacity: 1; height: auto }
@@ -16,21 +19,58 @@ html
       .btn.btn-lg.btn-primary.btn-block(data-ldcv-set="") Dismiss
 
     .w-1024.rwd.mx-auto.my-4
-      .d-flex.align-items-center
-        .btn.btn-primary(ld="fetch") Fetch
-        .btn.btn-danger.d-none(ld="reset") Reset
-        .ml-4
-          | Total
-          b.mx-2(ld="count") 0
-          | items fetched.
-      hr
-      div(style="display:grid;grid-template-columns:repeat(4,minmax(100px,1fr));gap:1em")
-        .card.item.shadow(ld-each="item"): .card-body: div(ld="id")
+      .row
+        +scope("fetch1").col-md
 
-    +script("assets/lib/@loadingio/ldquery/main/index.min.js")
-    +script("assets/lib/@loadingio/debounce.js/main/index.min.js")
-    +script("assets/lib/ldview/main/index.min.js")
-    +script("assets/lib/ldcover/main/index.min.js")
-    +script("assets/lib/ldloader/main/index.min.js")
-    +script("assets/lib/ldpage/dev/index.min.js")
-    +script("js/index.js")
+          .d-flex.align-items-center
+            .btn.btn-primary(ld="fetch") Fetch
+            .btn.btn-danger.d-none(ld="reset") Reset
+            .ml-4
+              | Total
+              b.mx-2(ld="count") 0
+              | items fetched.
+            .btn.btn-text.d-none(ld="finish") Finished.
+          hr
+
+          div(style="display:grid;grid-template-columns:repeat(4,minmax(100px,1fr));gap:1em")
+            .card.item.shadow(ld-each="item"): .card-body: div(ld="id")
+        .col-md
+          +scope("fetch2").mb-4
+            .d-flex.align-items-center
+              .btn.btn-primary(ld="fetch") Fetch
+              .btn.btn-danger.d-none(ld="reset") Reset
+              .ml-4
+                | Total
+                b.mx-2(ld="count") 0
+                | items fetched.
+              .btn.btn-text.d-none(ld="finish") Finished.
+            hr
+            .rounded.border.shadow-sm.d-flex.justify-content-around.g-4.flex-wrap.p-4(
+            style="height:80vh;overflow:scroll")
+              .card.item.shadow.flex-grow-1.w-100(ld-each="item"): .card-body: div(ld="id")
+              div(ld="pivot")
+          +scope("fetch3")
+            .d-flex.align-items-center
+              .btn.btn-primary(ld="fetch") Fetch
+              .btn.btn-danger.d-none(ld="reset") Reset
+              .ml-4
+                | Total
+                b.mx-2(ld="count") 0
+                | items fetched.
+              .btn.btn-text.d-none(ld="finish") Finished.
+            hr
+            .rounded.border.shadow-sm.d-flex.justify-content-around.g-4.flex-wrap.p-4(
+            ld="host", style="height:80vh;overflow:scroll")
+              .card.item.shadow.flex-grow-1.w-100(ld-each="item"): .card-body: div(ld="id")
+              div(ld="pivot")
+
+    +script([
+      {name: "@loadingio/ldquery"},
+      {name: "proxise"},
+      {name: "@loadingio/debounce.js"},
+      {name: "ldview"},
+      {name: "ldcover"},
+      {name: "ldloader"},
+      {name: "@loadingio/paginate", version: "dev"},
+      {url: "js/index.js"}
+    ])
