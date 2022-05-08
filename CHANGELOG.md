@@ -3,6 +3,7 @@
 ## v0.1.0 (upcoming)
 
  - rename module to `@loadingio/paginate`. export `paginate` instead of `ldpage`
+ - upgrade dependencies to fix vulnerabilities
 
 
 ## v0.0.4
