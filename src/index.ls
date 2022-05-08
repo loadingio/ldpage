@@ -19,7 +19,7 @@ paginate = (opt = {}) ->
     fetch-on-scroll: false
   } <<< opt
   @ <<< @_o{limit, offset}
-  if @_o.host => @set-host that
+  @set-host(@_o.host or document.scrollingElement)
   @
 
 paginate.prototype = Object.create(Object.prototype) <<< do
@@ -41,12 +41,14 @@ paginate.prototype = Object.create(Object.prototype) <<< do
     if @host => @host.removeEventListener \scroll, f
     @host = (if typeof(host) == \string => document.querySelector(host) else host)
     if !@host => @host = null; return
-    if @_o.fetch-on-scroll and !@_o.pivot => return @host.addEventListener \scroll, f
+    if @_o.fetch-on-scroll and !@_o.pivot => @host.addEventListener \scroll, f
+
+    update = (ns) ~>
+      if !( ns.map(->it.isIntersecting).filter(->it).length and @fetchable! ) => return
+      @fetch!then ~> @fire \scroll.fetch, it
+
+    if @obs and @_o.pivot => @obs.unobserve @_o.pivot
     if @_o.pivot =>
-      if @obs => @obs.unobserve @_o.pivot
-      update = (ns) ~>
-        if !( ns.map(->it.isIntersecting).filter(->it).length and @fetchable! ) => return
-        @fetch!then ~> @fire \scroll.fetch, it
       @obs = new IntersectionObserver update, {}
       @obs.observe @_o.pivot
 

@@ -25,7 +25,8 @@ view = new ldview do
 ldld = new ldloader className: 'ldld full'
 ldcv = new ldcover root: '.ldcv'
 
-page = new ldpage do
+page = new paginate do
+  fetchOnScroll: true
   fetch: ->
     ldld.on!
     debounce 1000

@@ -51,7 +51,8 @@ ldld = new ldloader({
 ldcv = new ldcover({
   root: '.ldcv'
 });
-page = new ldpage({
+page = new paginate({
+  fetchOnScroll: true,
   fetch: function(){
     var this$ = this;
     ldld.on();

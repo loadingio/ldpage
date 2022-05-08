@@ -2,7 +2,7 @@
 (function(){
   var paginate;
   paginate = function(opt){
-    var ref$, that;
+    var ref$;
     opt == null && (opt = {});
     if (opt.fetch) {
       this._fetch = opt.fetch;
@@ -25,9 +25,7 @@
     }, opt);
     this.limit = (ref$ = this._o).limit;
     this.offset = ref$.offset;
-    if (that = this._o.host) {
-      this.setHost(that);
-    }
+    this.setHost(this._o.host || document.scrollingElement);
     return this;
   };
   paginate.prototype = import$(Object.create(Object.prototype), {
@@ -102,24 +100,24 @@
         return;
       }
       if (this._o.fetchOnScroll && !this._o.pivot) {
-        return this.host.addEventListener('scroll', f);
+        this.host.addEventListener('scroll', f);
+      }
+      update = function(ns){
+        if (!(ns.map(function(it){
+          return it.isIntersecting;
+        }).filter(function(it){
+          return it;
+        }).length && this$.fetchable())) {
+          return;
+        }
+        return this$.fetch().then(function(it){
+          return this$.fire('scroll.fetch', it);
+        });
+      };
+      if (this.obs && this._o.pivot) {
+        this.obs.unobserve(this._o.pivot);
       }
       if (this._o.pivot) {
-        if (this.obs) {
-          this.obs.unobserve(this._o.pivot);
-        }
-        update = function(ns){
-          if (!(ns.map(function(it){
-            return it.isIntersecting;
-          }).filter(function(it){
-            return it;
-          }).length && this$.fetchable())) {
-            return;
-          }
-          return this$.fetch().then(function(it){
-            return this$.fire('scroll.fetch', it);
-          });
-        };
         this.obs = new IntersectionObserver(update, {});
         return this.obs.observe(this._o.pivot);
       }
