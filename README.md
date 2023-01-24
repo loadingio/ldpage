@@ -29,12 +29,12 @@ create a paginate object:
 
 you can process fetched data directly in the fetch function:
 
-    mypal = new ldpage do
+    mypal = new paginate do
       fetch: ->
         ld$.fetch '...' , {}, {type: \json}
           .then ->
             render(it)
-            return it
+            return it /* should return the fetched list */
 
 
 see also `sample/index.ls`.
@@ -60,9 +60,9 @@ see also `sample/index.ls`.
    - default 5. rounding may lead to extra px uncounted so a small default value 5 is used here.
    - omitted if `fetchOnScroll` is false.
    - larger `boundary` makes fetch triggered earlier.
- - `fetch`: required custom function to fetch data according to ldpage's status.
+ - `fetch`: required custom function to fetch data according to `@loadingio/paginate`'s status.
    - when called, - use `this.limit` and `this.offset` for current position of fetch progress.
-   - should return an Array. ldpage use it to update `this.offset` and count progress.
+   - should return an Array. `@loadingio/paginate` use it to update `this.offset` and count progress.
  - `enabled`: default true. when false, fetch won't start until re-enabled by `toggle(v)`.
 
 
@@ -78,10 +78,10 @@ see also `sample/index.ls`.
 
 ## Events
 
- - `empty`: fired when ldpage confirms that the list is empty.
- - `finish`: fired when ldpage confirms that all items are fetched.
- - `fetch`: fired when ldpage fetch a new list of data
- - `scroll.fetch`: fired when ldpage fetch a new list of data triggered by scrolling.
+ - `empty`: fired when `@loadingio/paginate` confirms that the list is empty.
+ - `finish`: fired when `@loadingio/paginate` confirms that all items are fetched.
+ - `fetch`: fired when `@loadingio/paginate` fetch a new list of data
+ - `scroll.fetch`: fired when `@loadingio/paginate` fetch a new list of data triggered by scrolling.
    - can happen along with `fetch` event.
  - `fetching`: fired before fetch is called.
 
