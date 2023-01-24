@@ -52,8 +52,8 @@ see also `sample/index.ls`.
  - `fetchOnScroll`: default false. when true, fetch when scrolling to the bottom of `host`.
    - only applicable if `host` is provided
  - `fetchOnInit`: default false. should a fetch be called after init. possible values:
-   - `always`: fetch after init and reset
-   - `once`:  fetch only after init
+   - `always`: fetch after both `init` and `reset`
+   - `once`:  fetch only after `init`
    - `lazy`: fetch when visibility of `host` is changed to visible, and `offset` = 0
    - false: never fetch on init
  - `boundary`: threshold of the distance to `host` bottom to trigger fetch.
