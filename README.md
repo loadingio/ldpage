@@ -68,9 +68,9 @@ see also `sample/index.ls`.
 
 ## Method
 
- - `reset()`: reset page. opt:
- - `fetch`: fetch data again.
- - `isEnd`: is there anything to fetch.
+ - `reset()`: reset page.
+ - `fetch()`: fetch data again.
+ - `isEnd()`: is there anything to fetch.
  - `host(node)`: set scrolling host. use document.scrollingElement for the webpage itself.
  - `host(pivot)`: set pivot element ( for detecting refreshing )
  - `toggle(v)`: flip enabled/disabled statue. force set to v if v(true or false) is provided.
