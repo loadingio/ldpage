@@ -82,7 +82,7 @@ paginate.prototype = Object.create(Object.prototype) <<< do
       @_scroll-func = null
 
   _fetch: (opt={}) ->
-    if !@fetchable! => return res []
+    if !@fetchable! => return Promise.resolve([])
     @fire \fetching
     @_running = true
     @_user_fetch!then (r = []) ~>

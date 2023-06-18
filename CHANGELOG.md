@@ -1,8 +1,9 @@
 # Change Logs
 
-## v0.1.1 (upcoming)
+## v0.1.1
 
  - audit fix to fix dependencies vulnerability
+ - fix bug: `res` is not defined in `_fetch`
 
 
 ## v0.1.0

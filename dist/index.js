@@ -183,7 +183,7 @@
       var this$ = this;
       opt == null && (opt = {});
       if (!this.fetchable()) {
-        return res([]);
+        return Promise.resolve([]);
       }
       this.fire('fetching');
       this._running = true;
